@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YAO FLAME — A youth-led badminton design project</title>
+<meta name="description" content="YAO FLAME is a student-initiated badminton brand concept by Daniel Rong — product design, community donation and social impact.">
+<meta name="theme-color" content="#07070a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#07070a; --ink-2:#0d0e14;
+  --flame:#ff7f33; --flame-hot:#ffd08a; --flame-deep:#e8551a;
+  --flame-txt:#ffbe80;   /* type only — brighter than the 3D accent */
+  --cool:#7fa8d8;
+  --fg:#f7f9fc; --fg-dim:rgba(244,247,251,.82); --fg-faint:rgba(244,247,251,.56);
+  --font:"Sora","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-snap-type:y mandatory;scroll-behavior:auto}
+html[lang^="zh"] .act h2{letter-spacing:.01em;font-weight:300}
+html[lang^="zh"] .kicker,html[lang^="zh"] .stat span{letter-spacing:.24em}
+html[lang^="zh"] .doc h2{letter-spacing:.22em}
+@media (prefers-reduced-motion:reduce){ html{scroll-snap-type:y proximity} }
+body{background:var(--ink);color:var(--fg);font:300 16px/1.6 var(--font);overflow-x:hidden}
+::selection{background:var(--flame);color:#000}
+
+#scene{position:fixed;inset:0;z-index:0;display:block}
+#scrim{position:fixed;inset:0;z-index:1;pointer-events:none;transition:background .7s ease;
+  background:radial-gradient(135% 100% at 50% 50%,transparent 22%,rgba(7,7,10,.8) 100%)}
+#scrim[data-pos="left"]{background:
+  radial-gradient(125% 95% at 50% 50%,transparent 32%,rgba(7,7,10,.6) 100%),
+  linear-gradient(90deg,rgba(7,7,10,.93) 0%,rgba(7,7,10,.74) 36%,transparent 64%)}
+#scrim[data-pos="bottom"]{background:
+  radial-gradient(125% 95% at 50% 50%,transparent 32%,rgba(7,7,10,.6) 100%),
+  linear-gradient(0deg,rgba(7,7,10,.95) 0%,rgba(7,7,10,.62) 28%,transparent 54%)}
+
+/* ── acts ───────────────────────────────────────────── */
+#acts{position:fixed;inset:0;z-index:2;pointer-events:none}
+.act{position:absolute;left:0;right:0;padding:0 7vw;opacity:0;
+     transition:opacity .5s ease,transform .5s ease;will-change:opacity,transform}
+.act[data-pos="center"]{top:50%;transform:translateY(-50%);text-align:center}
+.act[data-pos="left"]{top:50%;transform:translateY(-50%)}
+.act[data-pos="bottom"]{bottom:11vh}
+.act > *{max-width:52ch}
+.act[data-pos="center"] > *{margin-left:auto;margin-right:auto}
+.kicker{font-size:.7rem;font-weight:400;letter-spacing:.44em;text-transform:uppercase;
+        color:var(--flame-txt);margin-bottom:1.3rem}
+.act h2{font-size:clamp(2rem,5.6vw,4rem);font-weight:200;line-height:1.08;letter-spacing:-.022em}
+/* Solid colour, not a clipped gradient: background-clip:text plus a filter
+   renders transparent in Safari, and the gradient's dark end read as muddy. */
+.act h2 em{font-style:normal;font-weight:400;color:#ffc98f;
+  text-shadow:0 1px 3px rgba(0,0,0,.95),
+              0 0 20px rgba(255,170,90,.6),
+              0 0 60px rgba(255,130,50,.45)}
+.act p{margin-top:1.15rem;font-size:clamp(.95rem,1.45vw,1.1rem);color:var(--fg-dim);max-width:46ch}
+.act[data-pos="center"] p{margin-left:auto;margin-right:auto}
+.act ul{margin-top:1.3rem;list-style:none;display:grid;gap:.5rem;max-width:44ch}
+.act li{font-size:clamp(.88rem,1.3vw,1rem);color:var(--fg-dim);padding-left:1.4rem;position:relative}
+.act li::before{content:"";position:absolute;left:0;top:.62em;width:.42rem;height:.42rem;
+  background:var(--flame-txt);border-radius:50%;box-shadow:0 0 14px rgba(255,166,92,.9)}
+.act .stat{margin-top:1.6rem;display:flex;gap:2.4rem;flex-wrap:wrap}
+.act[data-pos="center"] .stat{justify-content:center}
+.stat b{display:block;font-size:clamp(1.5rem,3.4vw,2.3rem);font-weight:200;color:#ffdcae;
+        line-height:1;letter-spacing:-.02em}
+.stat span{display:block;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;
+           color:var(--fg-faint);margin-top:.5rem}
+.act.tight h2{font-size:clamp(1.7rem,4.2vw,3rem)}
+.act.tight p{margin-top:.9rem;font-size:clamp(.88rem,1.3vw,1rem)}
+.ends{margin-top:1.6rem;display:flex;gap:.7rem;flex-wrap:wrap;pointer-events:auto}
+.act[data-pos="center"] .ends{justify-content:center}
+.pill{font:400 .72rem/1 var(--font);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--fg-dim);background:rgba(7,7,10,.5);border:1px solid rgba(244,247,251,.18);
+  border-radius:100px;padding:.78rem 1.2rem;cursor:pointer;text-decoration:none;
+  transition:color .25s,border-color .25s,background .25s}
+.pill:hover{color:#ffd9ab;border-color:rgba(255,166,92,.7);background:rgba(255,127,51,.12)}
+.fineprint{font-size:.7rem !important;color:var(--fg-faint) !important;margin-top:1.8rem !important;
+  letter-spacing:.04em}
+.act h2,.act p,.act li,.kicker,.stat{
+  text-shadow:0 1px 3px rgba(0,0,0,.9),0 2px 22px rgba(0,0,0,.95),0 0 56px rgba(0,0,0,.85)}
+
+/* ── corner chrome ──────────────────────────────────── */
+.brand{position:fixed;top:1.7rem;left:7vw;z-index:5;font-size:.74rem;font-weight:400;
+       letter-spacing:.34em;text-transform:uppercase;color:var(--fg-faint)}
+.brand b{color:var(--fg-dim);font-weight:400}
+.brand a{color:inherit;text-decoration:none;transition:color .25s}
+.brand a:hover{color:var(--flame-txt)}
+/* one flex row, so the two can never overlap at any string length */
+.topright{position:fixed;top:1.55rem;right:7vw;z-index:5;display:flex;gap:.5rem;align-items:center}
+.topright button{font:400 .68rem/1 var(--font);letter-spacing:.2em;text-transform:uppercase;
+  color:var(--fg-faint);background:rgba(7,7,10,.35);white-space:nowrap;
+  border:1px solid rgba(242,244,248,.14);border-radius:100px;padding:.62rem 1.05rem;cursor:pointer;
+  transition:color .25s,border-color .25s}
+.topright button:hover{color:var(--flame-txt);border-color:rgba(255,166,92,.6)}
+#lang{letter-spacing:.14em;padding:.62rem .9rem}
+#rail{position:fixed;right:max(2.2vw,18px);top:50%;transform:translateY(-50%);z-index:4;
+      display:flex;flex-direction:column;gap:10px;pointer-events:none}
+#rail i{width:2px;height:24px;background:rgba(242,244,248,.13);border-radius:2px;transition:all .35s}
+#rail i.on{background:var(--flame-txt);box-shadow:0 0 12px rgba(255,166,92,.95)}
+.hint{position:fixed;bottom:1.9rem;left:50%;transform:translateX(-50%);z-index:4;
+      font-size:.64rem;letter-spacing:.3em;text-transform:uppercase;color:var(--fg-faint);
+      pointer-events:none;transition:opacity .5s}
+.hint::after{content:"";display:block;width:1px;height:18px;margin:.6rem auto 0;
+  background:linear-gradient(var(--flame-txt),transparent);animation:drip 2s ease-in-out infinite}
+@keyframes drip{0%,100%{opacity:.25;transform:translateY(-3px)}50%{opacity:1;transform:translateY(3px)}}
+#scroller{position:relative;z-index:0;pointer-events:none}
+#scroller section{height:100svh;scroll-snap-align:start;scroll-snap-stop:always}
+
+/* ── readable layer ─────────────────────────────────── */
+#text{position:fixed;inset:0;z-index:20;background:var(--ink);overflow-y:auto;
+      opacity:0;visibility:hidden;transition:opacity .4s ease,visibility .4s}
+#text[aria-hidden="false"]{opacity:1;visibility:visible}
+.doc{max-width:46rem;margin:0 auto;padding:6.5rem 7vw 9rem}
+.doc[data-lang]{display:none}
+html[lang="en"] .doc[data-lang="en"],
+html[lang^="zh"] .doc[data-lang="zh"]{display:block}
+.doc h1{font-size:clamp(2rem,6vw,3rem);font-weight:200;letter-spacing:-.025em;line-height:1.08}
+.doc h1 em{font-style:normal;font-weight:400;color:var(--flame-txt)}
+.doc .lede{margin-top:1.1rem;font-size:1.02rem;color:var(--fg-dim)}
+.doc h2{margin:3.6rem 0 1rem;font-size:.7rem;font-weight:400;letter-spacing:.38em;
+        text-transform:uppercase;color:var(--flame-txt);padding-bottom:.8rem;
+        border-bottom:1px solid rgba(242,244,248,.1)}
+.doc h3{margin:2rem 0 .55rem;font-size:1.04rem;font-weight:400}
+.doc p{margin:.85rem 0;color:var(--fg-dim);font-size:.95rem}
+.doc ul,.doc ol{margin:.85rem 0 .85rem 1.15rem;color:var(--fg-dim);font-size:.95rem}
+.doc li{margin:.42rem 0}
+.doc a{color:var(--flame-txt);text-decoration:none;border-bottom:1px solid rgba(255,166,92,.4)}
+.doc a:hover{border-bottom-color:var(--flame-txt)}
+.doc figure{margin:1.6rem 0}
+.doc img{width:100%;border-radius:10px;display:block}
+.doc figcaption{margin-top:.6rem;font-size:.76rem;color:var(--fg-faint)}
+.tbl{overflow-x:auto;margin:1.4rem 0;-webkit-overflow-scrolling:touch}
+.tbl table{border-collapse:collapse;width:100%;min-width:34rem;font-size:.83rem}
+.tbl th,.tbl td{text-align:left;padding:.62rem .8rem;border-bottom:1px solid rgba(242,244,248,.08);
+                vertical-align:top;color:var(--fg-dim)}
+.tbl thead th{color:var(--fg);font-weight:400;border-bottom-color:rgba(255,166,92,.5)}
+.tbl thead th small{display:block;font-size:.68rem;color:var(--fg-faint);letter-spacing:.06em}
+.tbl tbody th{color:var(--fg-faint);font-weight:300;white-space:nowrap}
+.tbl .s{color:#ffc289;letter-spacing:.08em}
+.note{margin-top:1.1rem;padding:1rem 1.2rem;border-left:2px solid rgba(255,166,92,.55);
+      background:rgba(255,106,31,.04);font-size:.86rem;color:var(--fg-dim);border-radius:0 7px 7px 0}
+.docfoot{margin-top:4rem;padding-top:1.6rem;border-top:1px solid rgba(242,244,248,.1);
+         font-size:.8rem;color:var(--fg-faint)}
+#toScene{position:fixed;top:1.55rem;right:7vw;z-index:21;font:400 .68rem/1 var(--font);
+  letter-spacing:.2em;text-transform:uppercase;color:var(--fg-dim);background:var(--ink);
+  border:1px solid rgba(242,244,248,.16);border-radius:100px;padding:.62rem 1.05rem;cursor:pointer;
+  opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s,color .25s,border-color .25s}
+#text[aria-hidden="false"] ~ #toScene{opacity:1;visibility:visible}
+#toScene:hover{color:var(--flame-txt);border-color:rgba(255,166,92,.6)}
+
+#lightbox{position:fixed;inset:0;z-index:30;background:rgba(5,5,8,.94);
+  display:flex;align-items:center;justify-content:center;padding:5vh 5vw;
+  opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s;cursor:zoom-out}
+#lightbox[aria-hidden="false"]{opacity:1;visibility:visible}
+#lightbox figure{max-width:min(1100px,92vw);max-height:90vh;display:flex;
+  flex-direction:column;align-items:center;gap:1rem}
+#lightbox img{max-width:100%;max-height:78vh;object-fit:contain;border-radius:8px;
+  box-shadow:0 30px 90px rgba(0,0,0,.8)}
+#lightbox figcaption{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--flame-txt);text-align:center}
+.lb-close{position:absolute;top:1.4rem;right:max(5vw,1.4rem);width:2.6rem;height:2.6rem;
+  font:300 1.6rem/1 var(--font);color:var(--fg-dim);background:transparent;
+  border:1px solid rgba(244,247,251,.18);border-radius:50%;cursor:pointer;
+  transition:color .25s,border-color .25s}
+.lb-close:hover{color:var(--flame-txt);border-color:rgba(255,166,92,.6)}
+#hud{position:fixed;left:14px;bottom:14px;z-index:9;font:11px/1.6 ui-monospace,monospace;
+  color:rgba(255,255,255,.34);background:rgba(0,0,0,.42);padding:7px 10px;
+  border:1px solid rgba(255,255,255,.07);border-radius:7px;pointer-events:none;display:none}
+#hud b{color:var(--flame-txt);font-weight:400}
+
+@media (max-width:760px){
+  .brand{left:6vw;font-size:.6rem}
+  .brand span{display:none}
+  .topright{right:6vw;gap:.4rem}
+  .topright button{padding:.55rem .85rem;font-size:.62rem;letter-spacing:.14em}
+  #lang{padding:.55rem .7rem}
+  #toScene{right:6vw;padding:.55rem .85rem;font-size:.62rem}
+  .act{padding:0 6vw}
+  .act .stat{gap:1.5rem}
+  #rail{right:10px}
+  .doc{padding:6rem 6vw 7rem}
+  .act.tight .ends{gap:.45rem;margin-top:1.1rem}
+  .act.tight .pill{padding:.6rem .85rem;font-size:.62rem;letter-spacing:.1em}
+  .act.tight .fineprint{display:none}
+  .act.tight p{margin-top:.65rem}
+}
+@media (prefers-reduced-motion:reduce){ .hint::after{animation:none} }
+</style>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div id="scrim" data-pos="center"></div>
+
+<div class="brand"><a href="https://dr-16.github.io/yao-design-lab/" target="_blank" rel="noopener"><span>Yao Design Lab / </span><b>Yao Flame</b></a></div>
+<div class="topright">
+  <button id="lang" data-zh="EN">中文</button>
+  <button id="toText" aria-controls="text" aria-expanded="false" data-zh="文字版">Read as text</button>
+</div>
+<div id="rail" aria-hidden="true"></div>
+
+<div id="acts" aria-hidden="true">
+
+  <div class="act" data-pos="center">
+    <div class="kicker" data-zh="学生概念项目">Student concept project</div>
+    <h2>YAO <em>FLAME</em></h2>
+    <p data-zh="以热爱出发,相信自己。">Play with passion. Believe in yourself.</p>
+  </div>
+
+  <div class="act" data-pos="left">
+    <div class="kicker" data-zh="01 — 创始人">01 — The founder</div>
+    <h2>Daniel Rong</h2>
+    <p data-zh="火焰代表成长、内在驱动力,以及迎难而上的意愿。">The flame stands for growth, inner drive, and the willingness to push through challenges.</p>
+    <ul data-zh="&lt;li&gt;西温哥华高中学生&lt;/li&gt;&lt;li&gt;校羽毛球队队员&lt;/li&gt;&lt;li&gt;青训营运动员&lt;/li&gt;&lt;li&gt;社区中心长期志愿者&lt;/li&gt;">
+      <li>West Vancouver high school student</li>
+      <li>School badminton team member</li>
+      <li>Academy program athlete</li>
+      <li>Long-term community centre volunteer</li>
+    </ul>
+  </div>
+
+  <div class="act" data-pos="left">
+    <div class="kicker" data-zh="02 — 定位">02 — Positioning</div>
+    <h2 data-zh="一个学生发起的&lt;br&gt;&lt;em&gt;品牌概念&lt;/em&gt;">A student-initiated<br>brand <em>concept</em></h2>
+    <p data-zh="围绕羽毛球展开。重心是产品设计、品牌建设与社会责任的动手实践,而非商业销售。">Built around badminton. The focus is hands-on learning in product design, brand building and social responsibility — not commercial sales.</p>
+  </div>
+
+  <div class="act" data-pos="bottom">
+    <div class="kicker" data-zh="03 — 设计与开发">03 — Design &amp; development</div>
+    <h2 data-zh="从草图到中杆">From sketch to shaft</h2>
+    <ul data-zh="&lt;li&gt;甜区优化与手柄人机工程&lt;/li&gt;&lt;li&gt;手绘拍框几何&lt;/li&gt;&lt;li&gt;取自火焰渐变的配色&lt;/li&gt;&lt;li&gt;原型视觉,再对接制造伙伴&lt;/li&gt;">
+      <li>Sweet spot optimization and handle ergonomics</li>
+      <li>Hand-drawn frame geometry</li>
+      <li>A colour palette drawn from flame gradients</li>
+      <li>Prototype visuals, then a manufacturing partner</li>
+    </ul>
+  </div>
+
+  <div class="act" data-pos="bottom">
+    <div class="kicker" data-zh="04 — 三款球拍">04 — The rackets</div>
+    <h2 data-zh="三种&lt;em&gt;打法&lt;/em&gt;">Three ways to <em>play</em></h2>
+    <p data-zh="均衡控制、进攻力量、极限突击。完整规格呈现在球网上。">Balanced control, aggressive power, extreme attack. Full specification on the net.</p>
+  </div>
+
+  <div class="act" data-pos="left">
+    <div class="kicker" data-zh="05 — 社区">05 — Community</div>
+    <h2 data-zh="十支球拍,&lt;br&gt;&lt;em&gt;送出去&lt;/em&gt;">Ten rackets,<br>given <em>away</em></h2>
+    <p data-zh="捐赠给西温哥华社区中心,不带任何商业意图、广告或推广。">Donated to the West Vancouver Community Centre, with no commercial intent, advertising or promotion.</p>
+    <div class="stat" data-zh="&lt;div&gt;&lt;b&gt;10&lt;/b&gt;&lt;span&gt;支球拍&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;1月28日&lt;/b&gt;&lt;span&gt;2026 年&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;0&lt;/b&gt;&lt;span&gt;附加条件&lt;/span&gt;&lt;/div&gt;">
+      <div><b>10</b><span>Rackets</span></div>
+      <div><b>Jan 28</b><span>2026</span></div>
+      <div><b>0</b><span>Strings attached</span></div>
+    </div>
+  </div>
+
+  <div class="act tight" data-pos="center">
+    <div class="kicker" data-zh="06 — 社会影响">06 — Social impact</div>
+    <h2 data-zh="未来收入的 &lt;em&gt;5%&lt;/em&gt;"><em>5%</em><br>of future revenue</h2>
+    <p data-zh="投入青少年教育与体育项目 —— 因为品牌真正的力量在于社会责任。">Committed to education and sport programs for teenagers — because the true power of a brand lies in social responsibility.</p>
+  </div>
+
+  <div class="act tight" data-pos="bottom">
+    <div class="kicker" data-zh="07 — 档案">07 — Archive</div>
+    <h2 data-zh="全部细节,&lt;em&gt;近看&lt;/em&gt;">Everything, <em>up close</em></h2>
+    <p data-zh="证书、信件、草图与成品球拍。点击任意一张可全屏查看。">Certificates, letters, sketches and the finished rackets. Click any panel to open it full size.</p>
+    <div class="ends">
+      <a class="pill" href="https://drive.google.com/drive/folders/1wpWWGibdR3zyjWh2RAXuXPTOW8p8hJYg" target="_blank" rel="noopener" data-zh="档案文件">Documents</a>
+      <a class="pill" href="mailto:danielrong16@gmail.com">danielrong16@gmail.com</a>
+      <a class="pill" href="tel:3659926799">365 992 6799</a>
+      <a class="pill" href="https://dr-16.github.io/yao-design-lab/" target="_blank" rel="noopener" data-zh="Yao Design Lab">Yao Design Lab</a>
+      <button class="pill" id="toText2" data-zh="文字版">Read as text</button>
+    </div>
+    <p class="fineprint" data-zh="2026 YAO FLAME — Yao Design Lab 旗下的学生概念项目,非商业机构。">2026 YAO FLAME — a student concept project under Yao Design Lab. Not a commercial business.</p>
+  </div>
+
+</div>
+
+<div class="hint" id="hint" data-zh="向下滚动">Scroll</div>
+<div id="hud">t <b id="h-t">0.000</b> · act <b id="h-a">0</b> · fps <b id="h-f">–</b></div>
+<div id="scroller"><section></section><section></section><section></section><section></section><section></section><section></section><section></section><section></section></div>
+
+<!-- ───────────────────────── readable layer ───────────────────────── -->
+<main id="text" aria-hidden="true">
+<article class="doc" data-lang="en">
+  <h1>YAO <em>FLAME</em></h1>
+  <p class="lede">A youth-led design project exploring branding, product development and community impact through badminton. A Yao Design Lab project by Daniel Rong.</p>
+  <p class="lede" style="font-size:.88rem;margin-top:.6rem">Sport brands · Community contribution · Social impact</p>
+
+  <h2>The founder</h2>
+  <p>Daniel Rong is a West Vancouver high school student, a member of his school badminton team, an academy program athlete, and a long-term volunteer at his local community centre.</p>
+  <p>Receiving a certificate presented by the Mayor of West Vancouver strengthened his belief that meaningful contributions, no matter how small, can make a real impact — and inspired him to do more for the community.</p>
+  <p>Through long-term training with the school team and the academy, as well as volunteer work, he realized that a high-quality, well-designed and affordable badminton racket can help more people. YAO FLAME was created to make that belief a reality.</p>
+  <p>The “flame” symbolizes growth, inner drive, and the willingness to push through challenges. <strong>Play with passion. Believe in yourself.</strong></p>
+
+  <h2>Brand positioning</h2>
+  <p>YAO FLAME is a young, student-initiated creative brand concept built around badminton.</p>
+  <p>The finished rackets in this project focus on hands-on learning in product design and development, brand building, and social responsibility, rather than on operating as a commercial business.</p>
+
+  <h2>Design &amp; development</h2>
+  <p>The early design stages focused on understanding racket structure, weight balance, grip comfort and aesthetic direction.</p>
+  <ol>
+    <li>Identifying key performance components: sweet spot optimization and handle ergonomics.</li>
+    <li>Sketching hand-drawn concepts: frame geometry.</li>
+    <li>Developing brand-aligned colour and pattern ideas: a palette inspired by flame gradients.</li>
+    <li>Creating prototype visuals to show potential direction.</li>
+  </ol>
+  <p>From there, YAO FLAME worked with a manufacturing partner to conduct research and refine the product development process.</p>
+
+  <h2>The rackets</h2>
+  <p>Three rackets, each built for a different playing style and performance need.</p>
+  <div class="tbl">
+  <table>
+    <thead><tr><th></th>
+      <th>YF-B25<small>Balanced Control</small></th>
+      <th>YF-A25<small>Aggressive Power</small></th>
+      <th>YF-X25<small>Extreme Attack</small></th></tr></thead>
+    <tbody>
+      <tr><th>Play style</th><td>All-round balanced</td><td>Attack-oriented</td><td>Extreme power</td></tr>
+      <tr><th>Target player</th><td>Singles &amp; doubles</td><td>Aggressive singles</td><td>Advanced / pro singles</td></tr>
+      <tr><th>Shaft diameter</th><td>Super slim (~7.0 mm)</td><td>Hyper slim (6.3 mm)</td><td>Extra slim (6.6 mm)</td></tr>
+      <tr><th>Shaft structure</th><td>Hollow</td><td>Solid core</td><td>Hollow</td></tr>
+      <tr><th>Shaft stiffness</th><td>Medium</td><td>Stiff</td><td>Extra stiff</td></tr>
+      <tr><th>Kick point</th><td>Medium</td><td>High</td><td>High</td></tr>
+      <tr><th>Frame structure</th><td>T-Anchor</td><td>New built-in T-joint</td><td>Built-in T-joint</td></tr>
+      <tr><th>Frame geometry</th><td>Standard isometric</td><td>Modified isometric</td><td>Compact small</td></tr>
+      <tr><th>Frame shape</th><td>Box / aero hybrid</td><td>Aero hybrid</td><td>Aerodynamic</td></tr>
+      <tr><th>Frame size</th><td>Large</td><td>Medium–large</td><td>Small</td></tr>
+      <tr><th>String tension</th><td>Up to 76 lbs</td><td>Up to 76 lbs</td><td>Up to 76 lbs</td></tr>
+      <tr><th>Shot feel</th><td>High hold</td><td>Snappy rebound</td><td>Instant repulsion</td></tr>
+      <tr><th>Swing speed</th><td>Medium</td><td>Fast</td><td>Very fast</td></tr>
+      <tr><th>Control</th><td class="s">★★★★☆</td><td class="s">★★★☆☆</td><td class="s">★★☆☆☆</td></tr>
+      <tr><th>Power output</th><td class="s">★★★☆☆</td><td class="s">★★★★☆</td><td class="s">★★★★★</td></tr>
+      <tr><th>Defense &amp; drive</th><td class="s">★★★★☆</td><td class="s">★★★☆☆</td><td class="s">★★★☆☆</td></tr>
+      <tr><th>Positioning</th><td>Core balanced model</td><td>Main attack model</td><td>Flagship power model</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Community contribution</h2>
+  <h3>Badminton racket donation</h3>
+  <p>YAO FLAME is grateful to the West Vancouver Community Centre team for their longstanding service and support to local residents.</p>
+  <p>As part of its commitment to youth development and community well-being, YAO FLAME donated ten brand-new badminton rackets to the West Vancouver Community Centre, starting January 2026. The rackets were officially handed over on <strong>January 28, 2026</strong>.</p>
+  <p>Through this donation, we hope to:</p>
+  <ul>
+    <li>encourage more youth and families to experience badminton</li>
+    <li>support active and healthy lifestyles</li>
+    <li>contribute to a stronger and more connected community</li>
+  </ul>
+  <div class="note">These rackets were designed and developed by YAO FLAME and are provided with no commercial intent, advertising or promotion. Our only purpose is to give back to the community that has supported and inspired us.</div>
+
+  <h2>Social impact</h2>
+  <p>Long-term support for students at the Siddhartha Vanasthali Institute in Nepal has shaped Daniel’s understanding of how access to education and sport can change young lives.</p>
+  <p>After participating in the UN Youth Leadership “SE4All” program, he became more aware of the responsibility that projects and brands can carry beyond the products themselves, and learned how the inclusive Sustainable Development Goals (SDGs) can be integrated into real-world projects.</p>
+  <p>With this belief, YAO FLAME plans to dedicate <strong>5% of future sales revenue</strong> to support education and sport programs for teenagers.</p>
+
+  <h2>Documents</h2>
+  <p>Supporting documents and certificates are available via a shared folder: Youth Award Certificate, Community Recognition Document, Donation Overview, and the Nepal Charity Appreciation Letter.</p>
+  <p><a href="https://drive.google.com/drive/folders/1wpWWGibdR3zyjWh2RAXuXPTOW8p8hJYg" target="_blank" rel="noopener">View the shared folder →</a></p>
+
+  <h2>Contact</h2>
+  <p>For project-related inquiries:</p>
+  <ul>
+    <li>Email — <a href="mailto:danielrong16@gmail.com">danielrong16@gmail.com</a></li>
+    <li>Phone — <a href="tel:3659926799">365 992 6799</a></li>
+    <li>Yao Design Lab — <a href="https://dr-16.github.io/yao-design-lab/" target="_blank" rel="noopener">dr-16.github.io/yao-design-lab</a></li>
+  </ul>
+  <p class="docfoot">© 2026 YAO FLAME — a student concept project under Yao Design Lab. Not a commercial business.</p>
+</article>
+<article class="doc" data-lang="zh">
+  <h1>YAO <em>FLAME</em></h1>
+  <p class="lede">一个由青少年发起的设计项目,以羽毛球为载体,探索品牌、产品开发与社区影响。Yao Design Lab 旗下项目,创始人 Daniel Rong。</p>
+  <p class="lede" style="font-size:.88rem;margin-top:.6rem">运动品牌 · 社区贡献 · 社会影响</p>
+
+  <h2>创始人</h2>
+  <p>Daniel Rong 是西温哥华的一名高中学生,校羽毛球队队员、青训营运动员,也是本地社区中心的长期志愿者。</p>
+  <p>从西温哥华市长手中接过那份证书,让他更加确信:再小的贡献也能带来真实的改变。这件事也促使他想为社区做得更多。</p>
+  <p>在校队和青训营的长期训练,加上志愿服务的经历,让他意识到一支高质量、设计用心且价格可负担的羽毛球拍,能够帮到更多人。YAO FLAME 就是为了把这个想法变成现实而创立的。</p>
+  <p>「火焰」象征成长、内在驱动力,以及迎难而上的意愿。<strong>以热爱出发,相信自己。</strong></p>
+
+  <h2>品牌定位</h2>
+  <p>YAO FLAME 是一个由学生发起的、围绕羽毛球展开的创意品牌概念。</p>
+  <p>这个项目中的成品球拍,重心在于产品设计与开发、品牌建设和社会责任的动手学习,而不是作为一门商业生意来运营。</p>
+
+  <h2>设计与开发</h2>
+  <p>早期的设计阶段集中在理解球拍结构、重量平衡、握持手感与美学方向。</p>
+  <ol>
+    <li>确定关键性能部件:甜区优化与手柄人机工程。</li>
+    <li>手绘概念草图:拍框几何。</li>
+    <li>发展贴合品牌的配色与图案:取自火焰渐变的色板。</li>
+    <li>制作原型视觉,呈现可能的方向。</li>
+  </ol>
+  <p>在此基础上,YAO FLAME 与一家制造伙伴合作,进行研究并完善产品开发流程。</p>
+
+  <h2>三款球拍</h2>
+  <p>三支球拍,各自面向不同的打法与性能需求。</p>
+  <div class="tbl">
+  <table>
+    <thead><tr><th></th>
+      <th>YF-B25<small>均衡控制</small></th>
+      <th>YF-A25<small>进攻力量</small></th>
+      <th>YF-X25<small>极限突击</small></th></tr></thead>
+    <tbody>
+      <tr><th>打法</th><td>全面均衡</td><td>进攻导向</td><td>极限力量</td></tr>
+      <tr><th>适用人群</th><td>单打与双打</td><td>进攻型单打</td><td>高阶 / 专业单打</td></tr>
+      <tr><th>中杆直径</th><td>超细(约 7.0 mm)</td><td>极细(6.3 mm)</td><td>特细(6.6 mm)</td></tr>
+      <tr><th>中杆结构</th><td>空心</td><td>实心</td><td>空心</td></tr>
+      <tr><th>中杆硬度</th><td>中等</td><td>偏硬</td><td>超硬</td></tr>
+      <tr><th>弯曲点</th><td>中段</td><td>高</td><td>高</td></tr>
+      <tr><th>拍框结构</th><td>T-Anchor</td><td>新型内置 T 头</td><td>内置 T 头</td></tr>
+      <tr><th>拍框几何</th><td>标准方圆头</td><td>改良方圆头</td><td>紧凑小拍面</td></tr>
+      <tr><th>拍框形状</th><td>盒式 / 破风混合</td><td>破风混合</td><td>全破风</td></tr>
+      <tr><th>拍面大小</th><td>大</td><td>中偏大</td><td>小</td></tr>
+      <tr><th>穿线磅数</th><td>最高 76 磅</td><td>最高 76 磅</td><td>最高 76 磅</td></tr>
+      <tr><th>击球手感</th><td>持球感强</td><td>回弹迅捷</td><td>瞬间弹射</td></tr>
+      <tr><th>挥速</th><td>中等</td><td>快</td><td>非常快</td></tr>
+      <tr><th>控制</th><td class="s">★★★★☆</td><td class="s">★★★☆☆</td><td class="s">★★☆☆☆</td></tr>
+      <tr><th>力量输出</th><td class="s">★★★☆☆</td><td class="s">★★★★☆</td><td class="s">★★★★★</td></tr>
+      <tr><th>防守与平抽</th><td class="s">★★★★☆</td><td class="s">★★★☆☆</td><td class="s">★★★☆☆</td></tr>
+      <tr><th>产品定位</th><td>核心均衡款</td><td>主力进攻款</td><td>旗舰力量款</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>社区贡献</h2>
+  <h3>羽毛球拍捐赠</h3>
+  <p>YAO FLAME 感谢西温哥华社区中心团队长期以来对本地居民的服务与支持。</p>
+  <p>作为对青少年发展与社区福祉承诺的一部分,YAO FLAME 自 2026 年 1 月起向西温哥华社区中心捐赠了十支全新羽毛球拍,并于 <strong>2026 年 1 月 28 日</strong>正式交接。</p>
+  <p>通过这次捐赠,我们希望:</p>
+  <ul>
+    <li>鼓励更多青少年和家庭接触羽毛球</li>
+    <li>支持积极健康的生活方式</li>
+    <li>为更紧密、更有联结的社区贡献一份力量</li>
+  </ul>
+  <div class="note">这些球拍由 YAO FLAME 设计开发,捐赠不带任何商业意图、广告或推广。我们唯一的目的,是回馈这个一直支持并激励着我们的社区。</div>
+
+  <h2>社会影响</h2>
+  <p>长期资助尼泊尔 Siddhartha Vanasthali Institute 的学生,让 Daniel 更深地理解到:教育与体育的可及性,能够改变年轻人的人生。</p>
+  <p>参加联合国青年领导力「SE4All」项目后,他更清楚地意识到项目与品牌在产品之外所能承担的责任,也学会了如何将包容性的可持续发展目标(SDGs)融入真实的项目之中。</p>
+  <p>基于这一信念,YAO FLAME 计划将未来销售收入的 <strong>5%</strong> 投入青少年教育与体育项目。</p>
+
+  <h2>证明材料</h2>
+  <p>相关证书与文件存放在共享文件夹中:青少年奖项证书、社区表彰文件、捐赠概览,以及尼泊尔方面的感谢信。</p>
+  <p><a href="https://drive.google.com/drive/folders/1wpWWGibdR3zyjWh2RAXuXPTOW8p8hJYg" target="_blank" rel="noopener">查看共享文件夹 →</a></p>
+
+  <h2>联系方式</h2>
+  <p>项目相关事宜,欢迎联系:</p>
+  <ul>
+    <li>邮箱 — <a href="mailto:danielrong16@gmail.com">danielrong16@gmail.com</a></li>
+    <li>电话 — <a href="tel:3659926799">365 992 6799</a></li>
+    <li>Yao Design Lab — <a href="https://dr-16.github.io/yao-design-lab/" target="_blank" rel="noopener">dr-16.github.io/yao-design-lab</a></li>
+  </ul>
+  <p class="docfoot">© 2026 YAO FLAME — Yao Design Lab 旗下的学生概念项目,非商业机构。</p>
+</article>
+</main>
+<button id="toScene" data-zh="返回场景">Back to scene</button>
+
+<div id="lightbox" aria-hidden="true">
+  <figure>
+    <img alt="">
+    <figcaption></figcaption>
+  </figure>
+  <button class="lb-close" aria-label="Close">&times;</button>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+  // the dev server has no cache headers, so bust it locally; ship the plain path
+  const dev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  import('./scene.js' + (dev ? `?v=${Date.now()}` : ''));
+</script>
+<script>
+(function(){
+  const txt=document.getElementById('text'), open=document.getElementById('toText'),
+        close=document.getElementById('toScene');
+  let scrollMemo=0;
+  function show(on){
+    if(on) scrollMemo=scrollY;
+    txt.setAttribute('aria-hidden', on?'false':'true');
+    open.setAttribute('aria-expanded', on?'true':'false');
+    document.body.style.overflow = on?'hidden':'';
+    if(!on) scrollTo(0,scrollMemo); else txt.scrollTop=0;
+  }
+  open.onclick=()=>show(true); close.onclick=()=>show(false);
+  const alt=document.getElementById('toText2'); if(alt) alt.onclick=()=>show(true);
+  addEventListener('keydown',e=>{ if(e.key==='Escape' && txt.getAttribute('aria-hidden')==='false') show(false); });
+  // ── language ────────────────────────────────────────────────────
+  // English stays the default; the Chinese strings live in data-zh and the
+  // readable layer carries a whole second article.
+  const langBtn = document.getElementById('lang');
+  function setLang(lang){
+    const zh = lang === 'zh';
+    document.documentElement.lang = zh ? 'zh-CN' : 'en';
+    document.querySelectorAll('[data-zh]').forEach(el=>{
+      if(el.dataset.en === undefined) el.dataset.en = el.innerHTML;
+      el.innerHTML = zh ? el.dataset.zh : el.dataset.en;
+    });
+    try{ localStorage.setItem('yf-lang', lang); }catch(e){}
+    window.setSceneLang && window.setSceneLang(lang);   // redraw the canvas labels
+  }
+  window.__applyLang = setLang;
+  langBtn.onclick = () => setLang(document.documentElement.lang.startsWith('zh') ? 'en' : 'zh');
+  let saved = 'en';
+  try{ saved = localStorage.getItem('yf-lang') || 'en'; }catch(e){}
+  if(saved === 'zh') setLang('zh');
+
+  const lb=document.getElementById('lightbox'),
+        lbImg=lb.querySelector('img'), lbCap=lb.querySelector('figcaption');
+  window.openLightbox=(src,caption)=>{
+    lbImg.src=src; lbImg.alt=caption||''; lbCap.textContent=caption||'';
+    lb.setAttribute('aria-hidden','false');
+  };
+  const closeLb=()=>lb.setAttribute('aria-hidden','true');
+  lb.onclick=closeLb;
+  addEventListener('keydown',e=>{ if(e.key==='Escape') closeLb(); });
+
+  if(location.hostname==='localhost'||location.hostname==='127.0.0.1')
+    document.getElementById('hud').style.display='block';
+})();
+</script>
+</body>
+</html>
