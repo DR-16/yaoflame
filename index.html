@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>YAO FLAME — A youth-led badminton design project</title>
 <meta name="description" content="YAO FLAME is a student-initiated badminton brand concept by Daniel Rong — product design, community donation and social impact.">
-<meta name="theme-color" content="#07070a">
+<meta name="theme-color" content="#241209">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#07070a; --ink-2:#0d0e14;
+  --ink:#241209; --ink-2:#2d1a10;
   --flame:#ff7f33; --flame-hot:#ffd08a; --flame-deep:#e8551a;
   --flame-txt:#ffbe80;   /* type only — brighter than the 3D accent */
   --cool:#7fa8d8;
@@ -29,13 +29,13 @@ body{background:var(--ink);color:var(--fg);font:300 16px/1.6 var(--font);overflo
 
 #scene{position:fixed;inset:0;z-index:0;display:block}
 #scrim{position:fixed;inset:0;z-index:1;pointer-events:none;transition:background .7s ease;
-  background:radial-gradient(135% 100% at 50% 50%,transparent 22%,rgba(7,7,10,.8) 100%)}
+  background:radial-gradient(135% 100% at 50% 50%,transparent 22%,rgba(36,18,9,.8) 100%)}
 #scrim[data-pos="left"]{background:
-  radial-gradient(125% 95% at 50% 50%,transparent 32%,rgba(7,7,10,.6) 100%),
-  linear-gradient(90deg,rgba(7,7,10,.93) 0%,rgba(7,7,10,.74) 36%,transparent 64%)}
+  radial-gradient(125% 95% at 50% 50%,transparent 32%,rgba(36,18,9,.6) 100%),
+  linear-gradient(90deg,rgba(36,18,9,.93) 0%,rgba(36,18,9,.74) 36%,transparent 64%)}
 #scrim[data-pos="bottom"]{background:
-  radial-gradient(125% 95% at 50% 50%,transparent 32%,rgba(7,7,10,.6) 100%),
-  linear-gradient(0deg,rgba(7,7,10,.95) 0%,rgba(7,7,10,.62) 28%,transparent 54%)}
+  radial-gradient(125% 95% at 50% 50%,transparent 32%,rgba(36,18,9,.6) 100%),
+  linear-gradient(0deg,rgba(36,18,9,.95) 0%,rgba(36,18,9,.62) 28%,transparent 54%)}
 
 /* ── acts ───────────────────────────────────────────── */
 #acts{position:fixed;inset:0;z-index:2;pointer-events:none}
@@ -72,7 +72,7 @@ body{background:var(--ink);color:var(--fg);font:300 16px/1.6 var(--font);overflo
 .ends{margin-top:1.6rem;display:flex;gap:.7rem;flex-wrap:wrap;pointer-events:auto}
 .act[data-pos="center"] .ends{justify-content:center}
 .pill{font:400 .72rem/1 var(--font);letter-spacing:.14em;text-transform:uppercase;
-  color:var(--fg-dim);background:rgba(7,7,10,.5);border:1px solid rgba(244,247,251,.18);
+  color:var(--fg-dim);background:rgba(36,18,9,.5);border:1px solid rgba(244,247,251,.18);
   border-radius:100px;padding:.78rem 1.2rem;cursor:pointer;text-decoration:none;
   transition:color .25s,border-color .25s,background .25s}
 .pill:hover{color:#ffd9ab;border-color:rgba(255,166,92,.7);background:rgba(255,127,51,.12)}
@@ -90,7 +90,7 @@ body{background:var(--ink);color:var(--fg);font:300 16px/1.6 var(--font);overflo
 /* one flex row, so the two can never overlap at any string length */
 .topright{position:fixed;top:1.55rem;right:7vw;z-index:5;display:flex;gap:.5rem;align-items:center}
 .topright button{font:400 .68rem/1 var(--font);letter-spacing:.2em;text-transform:uppercase;
-  color:var(--fg-faint);background:rgba(7,7,10,.35);white-space:nowrap;
+  color:var(--fg-faint);background:rgba(36,18,9,.35);white-space:nowrap;
   border:1px solid rgba(242,244,248,.14);border-radius:100px;padding:.62rem 1.05rem;cursor:pointer;
   transition:color .25s,border-color .25s}
 .topright button:hover{color:var(--flame-txt);border-color:rgba(255,166,92,.6)}
@@ -150,7 +150,7 @@ html[lang^="zh"] .doc[data-lang="zh"]{display:block}
 #text[aria-hidden="false"] ~ #toScene{opacity:1;visibility:visible}
 #toScene:hover{color:var(--flame-txt);border-color:rgba(255,166,92,.6)}
 
-#lightbox{position:fixed;inset:0;z-index:30;background:rgba(5,5,8,.94);
+#lightbox{position:fixed;inset:0;z-index:30;background:rgba(24,12,7,.96);
   display:flex;align-items:center;justify-content:center;padding:5vh 5vw;
   opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s;cursor:zoom-out}
 #lightbox[aria-hidden="false"]{opacity:1;visibility:visible}
@@ -327,7 +327,7 @@ html[lang^="zh"] .doc[data-lang="zh"]{display:block}
       <tr><th>Frame geometry</th><td>Standard isometric</td><td>Modified isometric</td><td>Compact small</td></tr>
       <tr><th>Frame shape</th><td>Box / aero hybrid</td><td>Aero hybrid</td><td>Aerodynamic</td></tr>
       <tr><th>Frame size</th><td>Large</td><td>Medium–large</td><td>Small</td></tr>
-      <tr><th>String tension</th><td>Up to 76 lbs</td><td>Up to 76 lbs</td><td>Up to 76 lbs</td></tr>
+      <tr><th>String tension</th><td>Up to 28 lbs</td><td>Up to 30 lbs</td><td>Up to 32 lbs</td></tr>
       <tr><th>Shot feel</th><td>High hold</td><td>Snappy rebound</td><td>Instant repulsion</td></tr>
       <tr><th>Swing speed</th><td>Medium</td><td>Fast</td><td>Very fast</td></tr>
       <tr><th>Control</th><td class="s">★★★★☆</td><td class="s">★★★☆☆</td><td class="s">★★☆☆☆</td></tr>
@@ -412,7 +412,7 @@ html[lang^="zh"] .doc[data-lang="zh"]{display:block}
       <tr><th>拍框几何</th><td>标准方圆头</td><td>改良方圆头</td><td>紧凑小拍面</td></tr>
       <tr><th>拍框形状</th><td>盒式 / 破风混合</td><td>破风混合</td><td>全破风</td></tr>
       <tr><th>拍面大小</th><td>大</td><td>中偏大</td><td>小</td></tr>
-      <tr><th>穿线磅数</th><td>最高 76 磅</td><td>最高 76 磅</td><td>最高 76 磅</td></tr>
+      <tr><th>穿线磅数</th><td>最高 28 磅</td><td>最高 30 磅</td><td>最高 32 磅</td></tr>
       <tr><th>击球手感</th><td>持球感强</td><td>回弹迅捷</td><td>瞬间弹射</td></tr>
       <tr><th>挥速</th><td>中等</td><td>快</td><td>非常快</td></tr>
       <tr><th>控制</th><td class="s">★★★★☆</td><td class="s">★★★☆☆</td><td class="s">★★☆☆☆</td></tr>

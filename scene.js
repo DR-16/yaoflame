@@ -5,7 +5,8 @@ import { UnrealBloomPass }  from 'three/addons/postprocessing/UnrealBloomPass.js
 import { OutputPass }       from 'three/addons/postprocessing/OutputPass.js';
 
 /* ═══════════════════════════ setup ═══════════════════════════ */
-const INK = 0x07070a;
+// Not black — a banked-ember brown, so the room reads as warm dark rather than void.
+const INK = 0x241209;
 const FLAME      = new THREE.Color(0xff6a1f);
 const FLAME_HOT  = new THREE.Color(0xffd27a);
 const FLAME_DEEP = new THREE.Color(0x8c1d04);
@@ -88,22 +89,22 @@ const netGroup = new THREE.Group(); world.add(netGroup);
 const SPEC = {
   en: {
     title:'SPECIFICATION', sub:'YAO FLAME · 2026',
-    foot:'String tension — up to 76 lbs across all three models',
-    labels:['Play style','Target player','Shaft','Stiffness','Shot feel','Control','Power'],
+    foot:'Tension figures are frame maxima, not recommended settings',
+    labels:['Play style','Target player','Shaft','Stiffness','Shot feel','String tension','Control','Power'],
     cols:[
-      { code:'YF-B25', name:'Balanced Control', rows:['All-round balanced','Singles & doubles','7.0 mm · Hollow','Medium','High hold','★★★★☆','★★★☆☆'] },
-      { code:'YF-A25', name:'Aggressive Power', rows:['Attack-oriented','Aggressive singles','6.3 mm · Solid core','Stiff','Snappy rebound','★★★☆☆','★★★★☆'] },
-      { code:'YF-X25', name:'Extreme Attack',   rows:['Extreme power','Advanced / pro','6.6 mm · Hollow','Extra stiff','Instant repulsion','★★☆☆☆','★★★★★'] },
+      { code:'YF-B25', name:'Balanced Control', rows:['All-round balanced','Singles & doubles','7.0 mm · Hollow','Medium','High hold','Up to 28 lbs','★★★★☆','★★★☆☆'] },
+      { code:'YF-A25', name:'Aggressive Power', rows:['Attack-oriented','Aggressive singles','6.3 mm · Solid core','Stiff','Snappy rebound','Up to 30 lbs','★★★☆☆','★★★★☆'] },
+      { code:'YF-X25', name:'Extreme Attack',   rows:['Extreme power','Advanced / pro','6.6 mm · Hollow','Extra stiff','Instant repulsion','Up to 32 lbs','★★☆☆☆','★★★★★'] },
     ],
   },
   zh: {
     title:'产品规格', sub:'YAO FLAME · 2026',
-    foot:'穿线磅数 — 三款均可达 76 磅',
-    labels:['打法','适用人群','中杆','硬度','击球手感','控制','力量'],
+    foot:'以上为拍框承受上限,非推荐穿线磅数',
+    labels:['打法','适用人群','中杆','硬度','击球手感','穿线磅数','控制','力量'],
     cols:[
-      { code:'YF-B25', name:'均衡控制', rows:['全面均衡','单打与双打','7.0 mm · 空心','中等','持球感强','★★★★☆','★★★☆☆'] },
-      { code:'YF-A25', name:'进攻力量', rows:['进攻导向','进攻型单打','6.3 mm · 实心','偏硬','回弹迅捷','★★★☆☆','★★★★☆'] },
-      { code:'YF-X25', name:'极限突击', rows:['极限力量','高阶 / 专业','6.6 mm · 空心','超硬','瞬间弹射','★★☆☆☆','★★★★★'] },
+      { code:'YF-B25', name:'均衡控制', rows:['全面均衡','单打与双打','7.0 mm · 空心','中等','持球感强','最高 28 磅','★★★★☆','★★★☆☆'] },
+      { code:'YF-A25', name:'进攻力量', rows:['进攻导向','进攻型单打','6.3 mm · 实心','偏硬','回弹迅捷','最高 30 磅','★★★☆☆','★★★★☆'] },
+      { code:'YF-X25', name:'极限突击', rows:['极限力量','高阶 / 专业','6.6 mm · 空心','超硬','瞬间弹射','最高 32 磅','★★☆☆☆','★★★★★'] },
     ],
   },
 };
@@ -116,15 +117,17 @@ function drawSpec(){
   const S = SPEC[LANG] || SPEC.en;
   const W = specCanvas.width, H = specCanvas.height, c = specCanvas;
   const g = c.getContext('2d');
-  g.fillStyle = 'rgba(7,7,10,0.9)'; g.fillRect(0,0,W,H);
+  g.fillStyle = 'rgba(28,17,11,0.9)'; g.fillRect(0,0,W,H);
   g.strokeStyle = 'rgba(255,106,31,0.5)'; g.lineWidth = 5;
   g.strokeRect(2.5,2.5,W-5,H-5);
 
-  const padL = 300, colW = (W - padL - 70) / 3, top = 160, rowH = 82;
+  const padL = 300, colW = (W - padL - 70) / 3, top = 152, rowH = 74;
   g.textBaseline = 'middle';
 
-  g.font = FACE(300, 34); g.fillStyle = 'rgba(255,255,255,0.46)';
-  g.fillText(S.title, 56, 74);
+  // "SPECIFICATION" at 34px overran the 300px label gutter and collided with the
+  // first column; the Chinese title is short enough that it never showed up there.
+  g.font = FACE(300, 27); g.fillStyle = 'rgba(255,255,255,0.46)';
+  g.fillText(S.title, 56, 72);
   g.font = FACE(300, 26); g.fillStyle = 'rgba(255,150,80,0.9)';
   g.fillText(S.sub, 56, 118);
 
@@ -294,7 +297,7 @@ function videoScreen({ src, w, h, x, y, z, rotY = 0, parent = world }){
 const backWall = new THREE.Group(); world.add(backWall);
 {
   const wall = new THREE.Mesh(new THREE.BoxGeometry(22, 11, 0.4),
-    new THREE.MeshStandardMaterial({ color:0x0a0c12, roughness:.95 }));
+    new THREE.MeshStandardMaterial({ color:0x1c110d, roughness:.95 }));
   wall.position.set(0, 5, -16.5); backWall.add(wall);
   const trim = new THREE.Mesh(new THREE.BoxGeometry(9.0, 0.028, 0.06),
     new THREE.MeshBasicMaterial({ color:0xff7f33 }));
@@ -342,7 +345,7 @@ world.add(archive);
 {
   const wall = new THREE.Mesh(
     new THREE.BoxGeometry(13.5, 6.4, 0.3),
-    new THREE.MeshStandardMaterial({ color:0x0b0d13, roughness:.92 })
+    new THREE.MeshStandardMaterial({ color:0x1d120e, roughness:.92 })
   );
   wall.position.set(0, 2.7, GAL_Z - 0.55); archive.add(wall);
   const led = new THREE.Mesh(new THREE.BoxGeometry(13.5, 0.035, 0.05),
@@ -369,18 +372,35 @@ DISPLAYS.forEach((d,i)=>{
     const pg = probe.getContext('2d', { willReadFrequently:true });
     pg.drawImage(img, 0, 0, 48, 48);
     const pd = pg.getImageData(0, 0, 48, 48).data;
-    let lum = 0;
-    for(let i = 0; i < pd.length; i += 4) lum += (pd[i] + pd[i+1] + pd[i+2]) / 3;
-    const avg = lum / (pd.length / 4);
-    const exposure = Math.min(0.86, Math.max(0.3, 104 / Math.max(avg, 1)));
-    if(window.__exposures) window.__exposures.push({ f:d.f, avg:+avg.toFixed(0), exposure:+exposure.toFixed(2) });
+    let lum = 0, lum2 = 0;
+    const n = pd.length / 4;
+    for(let i = 0; i < pd.length; i += 4){
+      const l = (pd[i] + pd[i+1] + pd[i+2]) / 3;
+      lum += l; lum2 += l*l;
+    }
+    const avg = lum / n;
+    const spread = Math.sqrt(Math.max(0, lum2/n - avg*avg));
+    // Every panel is pulled to one perceived level. Trying to treat "flat scans" and
+    // "photographs" differently failed: a collage of photos and a certificate with a
+    // photo header both score as photographs and stayed bright. Average brightness
+    // alone, aimed at a single target, is what actually makes the wall read evenly.
+    const exposure = Math.min(0.92, Math.max(0.22, 68 / Math.max(avg, 1)));
+    if(window.__exposures) window.__exposures.push(
+      { f:d.f, avg:+avg.toFixed(0), spread:+spread.toFixed(0), exposure:+exposure.toFixed(2) });
 
     const paint = ()=>{
       const g = c.getContext('2d');
-      g.fillStyle = '#090a0f'; g.fillRect(0,0,c.width,c.height);
-      g.filter = `brightness(${exposure}) contrast(1.07) saturate(1.05)`;
+      g.fillStyle = '#1c110d'; g.fillRect(0,0,c.width,c.height);
       g.drawImage(img, 0, 0, W, c.height - capH);
-      g.filter = 'none';
+      // Multiply by a flat grey rather than ctx.filter = brightness(). The two are
+      // the same arithmetic, but ctx.filter is a late addition that Safari handles
+      // unreliably — it silently did nothing there, so scans stayed blown out on
+      // Safari while measuring clean in Chrome. Blend modes are supported everywhere.
+      const v = Math.round(exposure * 255);
+      g.globalCompositeOperation = 'multiply';
+      g.fillStyle = `rgb(${v},${v},${v})`;
+      g.fillRect(0, 0, W, c.height - capH);
+      g.globalCompositeOperation = 'source-over';
       g.fillStyle = '#ff7f33'; g.fillRect(0, c.height-capH, W, 4);
       g.fillStyle = '#eef1f7'; g.font = FACE(300, 31);
       g.textBaseline = 'middle';
@@ -445,7 +465,7 @@ const boardTex = new THREE.CanvasTexture(boardCanvas);
 boardTex.colorSpace = THREE.SRGBColorSpace;
 function drawBoard(main, sub){
   const g = boardCanvas.getContext('2d'), W = 1024, H = 420;
-  g.fillStyle = '#05050a'; g.fillRect(0,0,W,H);
+  g.fillStyle = '#180d08'; g.fillRect(0,0,W,H);
   // dot-matrix wash
   g.fillStyle = 'rgba(255,106,31,0.055)';
   for(let y=14;y<H;y+=15) for(let x=14;x<W;x+=15) g.fillRect(x,y,4,4);
@@ -473,7 +493,7 @@ drawBoard('YF','WEST VANCOUVER');   // replaced on the first act change
 }
 
 /* ═══════════════════════════ light ═══════════════════════════ */
-scene.add(new THREE.HemisphereLight(0x33435e, 0x05050a, 0.3));
+scene.add(new THREE.HemisphereLight(0x33435e, 0x6b2d12, 0.38));
 const key = new THREE.DirectionalLight(0xc8d8f2, 0.62);
 key.position.set(4, 14, 6); scene.add(key);
 [[-3.2,-4.5],[3.2,-4.5],[-3.2,4.5],[3.2,4.5]].forEach(([x,z],i)=>{
@@ -771,6 +791,7 @@ composer.addPass(bloom);
 composer.addPass(new OutputPass());
 composer.setSize(innerWidth, innerHeight);
 composer.setPixelRatio(Math.min(devicePixelRatio, LOW ? 1.4 : 2));
+if(location.hostname==='localhost'||location.hostname==='127.0.0.1') window.__bloom = bloom;
 
 /* ═══════════════════════════ loop ═══════════════════════════ */
 const clock = new THREE.Clock();
